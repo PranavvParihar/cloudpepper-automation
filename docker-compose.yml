@@ -1,13 +1,13 @@
 services:
-  ${PROJECT_NAME}:  # Change service name to project_name
+  odoo-service:  # Fixed service name
     image: odoo:18
-    container_name: ${PROJECT_NAME}  # Set container name to project_name
+    container_name: ${PROJECT_NAME}  # Will be replaced by script
     ports:
-      - "10031:8069"  # Odoo main port
-      - "10032:8071"  # Longpolling port
-      - "10033:8072"  # Live chat port
+      - "10031:8069"
+      - "10032:8071"
+      - "10033:8072"
     volumes:
-      - ${PROJECT_NAME}-web-data:/var/lib/odoo  # Change volume to project_name-web-data
+      - ${PROJECT_NAME}-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
     environment:
@@ -24,11 +24,11 @@ services:
     networks:
       - shared-postgres-network
     env_file:
-      - .env  
-      
+      - .env
+
 networks:
   shared-postgres-network:
     external: true
 
 volumes:
-  ${PROJECT_NAME}-web-data:  # Add a volume for project_name-web-data
+  ${PROJECT_NAME}-web-data:
