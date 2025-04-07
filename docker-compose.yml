@@ -23,7 +23,9 @@ services:
       odoo -c /etc/odoo/odoo.conf"
     networks:
       - shared-postgres-network
-
+    env_file:
+      - .env  
+      
 networks:
   shared-postgres-network:
     external: true
