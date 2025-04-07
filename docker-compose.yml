@@ -1,0 +1,32 @@
+services:
+  ${PROJECT_NAME}:  # Change service name to project_name
+    image: odoo:18
+    container_name: ${PROJECT_NAME}  # Set container name to project_name
+    ports:
+      - "10031:8069"  # Odoo main port
+      - "10032:8071"  # Longpolling port
+      - "10033:8072"  # Live chat port
+    volumes:
+      - ${PROJECT_NAME}-web-data:/var/lib/odoo  # Change volume to project_name-web-data
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    environment:
+      - HOST=shared-postgres
+      - USER=odoo
+      - PASSWORD=odoo
+    command: >
+      bash -c "
+      if [ ! -f /var/lib/odoo/.initialized ]; then
+        odoo -c /etc/odoo/odoo.conf -d ${PROJECT_NAME}_demo -i base --stop-after-init &&
+        touch /var/lib/odoo/.initialized;
+      fi;
+      odoo -c /etc/odoo/odoo.conf"
+    networks:
+      - shared-postgres-network
+
+networks:
+  shared-postgres-network:
+    external: true
+
+volumes:
+  ${PROJECT_NAME}-web-data:  # Add a volume for project_name-web-data
